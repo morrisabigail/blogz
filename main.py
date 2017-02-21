@@ -2,6 +2,7 @@ import webapp2, jinja2, os, re
 from google.appengine.ext import db
 from models import Post, User
 import hashutils
+import re
 
 template_dir = os.path.join(os.path.dirname(__file__), 'templates')
 jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir), autoescape = True)
@@ -21,7 +22,8 @@ class BlogHandler(webapp2.RequestHandler):
         """
 
         # TODO - filter the query so that only posts by the given user
-        return None
+        posts = Post.all().filter("author", user).order('-created')
+        return posts.fetch(limit=limit, offset=offset)
 
     def get_user_by_name(self, username):
         """ Get a user object from the db, based on their username """
@@ -99,7 +101,7 @@ class BlogIndexHandler(BlogHandler):
         else:
             prev_page = None
 
-        if len(posts) == self.page_size and Post.all().count() > offset+self.page_size:
+        if len(posts) == self.page_size and Post.all().count() > offset + self.page_size:
             next_page = page + 1
         else:
             next_page = None
@@ -303,5 +305,8 @@ app = webapp2.WSGIApplication([
 
 # A list of paths that a user must be logged in to access
 auth_paths = [
-    '/blog/newpost'
+    '/blog',
+    '/blog/newpost',
+    '/blog/<username:[a-zA-Z0-9_-]{3,20}>',
+    '/blog/<id:\d+>'
 ]
