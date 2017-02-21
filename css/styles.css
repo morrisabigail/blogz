@@ -22,6 +22,7 @@ input[type=email] {
     padding: 2px;
 }
 
+
 textarea {
     width: 400px;
     height: 200px;
@@ -59,6 +60,7 @@ hr {
 nav ul {
     padding: 0;
     display: inline-block;
+    width:100%;
 }
 
 nav ul li {
@@ -66,6 +68,7 @@ nav ul li {
     display: inline-block;
     margin-right: 15px;
 }
+
 
 nav #user-account {
     float: right;
